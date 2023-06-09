@@ -20,8 +20,6 @@ services:
       - MYSQL_USER=semaphore
       - MYSQL_PASSWORD=  # change!
     restart: unless-stopped
-    env-file:
-     - stack.env
   semaphore:
     container_name: ansiblesemaphore
     image: semaphoreui/semaphore:v2.8.90
@@ -49,5 +47,3 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
-    env-file:
-     - stack.env
