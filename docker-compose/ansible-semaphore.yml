@@ -1,49 +1,47 @@
 ---
-# env vars:
-# MYSQL_PASSWORD
-# SEMAPHORE_DB_PASS
-# SEMAPHORE_ADMIN_PASSWORD
-# SEMAPHORE_ACCESS_KEY_ENCRYPTION
-
-volumes:
-  semaphore-mysql:
-    driver: local
 services:
   mysql:
+    restart: unless-stopped
+    ports:
+      - 3306:3306
     image: mysql:8.0
     hostname: mysql
     volumes:
       - semaphore-mysql:/var/lib/mysql
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_DATABASE=semaphore
-      - MYSQL_USER=semaphore
-      - MYSQL_PASSWORD= ${MYSQL_PASSWORD}
-    restart: unless-stopped
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   semaphore:
-    container_name: ansiblesemaphore
-    image: semaphoreui/semaphore:v2.8.90
-    user: "${UID}:${GID}"
+    restart: unless-stopped
     ports:
       - 3000:3000
+    image: semaphoreui/semaphore:latest
     environment:
-      - SEMAPHORE_DB_USER=semaphore
-      - SEMAPHORE_DB_PASS= ${SEMAPHORE_DB_PASS}
-      - SEMAPHORE_DB_HOST=mysql
-      - SEMAPHORE_DB_PORT=3306
-      - SEMAPHORE_DB_DIALECT=mysql
-      - SEMAPHORE_DB=semaphore
-      - SEMAPHORE_PLAYBOOK_PATH=/tmp/semaphore/
-      - SEMAPHORE_ADMIN_PASSWORD= ${SEMAPHORE_ADMIN_PASSWORD}
-      - SEMAPHORE_ADMIN_NAME=admin
-      - SEMAPHORE_ADMIN_EMAIL=admin@localhost
-      - SEMAPHORE_ADMIN=admin
-      - SEMAPHORE_ACCESS_KEY_ENCRYPTION= ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
-      - ANSIBLE_HOST_KEY_CHECKING=false  # (optional) change to true if you want to enable host key checking
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: ${SEMAPHORE_DB_PASS}
+      SEMAPHORE_DB_HOST: mysql
+      SEMAPHORE_DB_PORT: 3306 
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_ADMIN: admin
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
+    depends_on:
+      - mysql
     volumes:
       - ./inventory/:/inventory:ro
       - ./authorized-keys/:/authorized-keys:ro
       - ./config/:/etc/semaphore:rw
-    restart: unless-stopped
-    depends_on:
-      - mysql
+volumes:
+  semaphore-mysql:
+
+# env vars:
+# MYSQL_PASSWORD
+# SEMAPHORE_DB_PASS
+# SEMAPHORE_ADMIN_PASSWORD
+# SEMAPHORE_ACCESS_KEY_ENCRYPTION
