@@ -29,6 +29,7 @@ services:
       SEMAPHORE_ADMIN_EMAIL: admin@localhost
       SEMAPHORE_ADMIN: admin
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
+      ANSIBLE_HOST_KEY_CHECKING: False
     depends_on:
       - mysql
     volumes:
