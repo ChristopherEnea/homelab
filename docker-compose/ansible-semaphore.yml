@@ -36,7 +36,6 @@ services:
     volumes:
       - ./inventory/:/inventory:ro
       - ./authorized-keys/:/authorized-keys:ro
-      - ./config/:/etc/semaphore:rw
 volumes:
   semaphore-mysql:
 
