@@ -2,8 +2,6 @@
 services:
   mysql:
     restart: unless-stopped
-    ports:
-      - 3306:3306
     image: mysql:8.0
     hostname: mysql
     volumes:
