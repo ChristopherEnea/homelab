@@ -13,8 +13,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   semaphore:
     restart: unless-stopped
-    ports:
-      - 3000:3000
+    # ports:
+      # - 3000:3000
     image: semaphoreui/semaphore:latest
     environment:
       SEMAPHORE_DB_USER: semaphore
@@ -35,6 +35,13 @@ services:
     volumes:
       - ./inventory/:/inventory:ro
       - ./authorized-keys/:/authorized-keys:ro
+    labels:
+      - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
+      - traefik.http.routers.semaphore.tls=false
+      - traefik.port=80
+    networks:
+      - traefik
+
 volumes:
   semaphore-mysql:
 
