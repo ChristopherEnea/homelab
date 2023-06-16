@@ -38,7 +38,8 @@ services:
     labels:
       - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
       - traefik.http.routers.semaphore.tls=false
-      - traefik.port=80
+      - traefik.port=
+      - traefik.http.services.semaphore.loadbalancer.server.port=3000
     networks:
       - traefik
       - default
