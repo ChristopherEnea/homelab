@@ -41,6 +41,7 @@ services:
       - traefik.port=80
     networks:
       - traefik
+      - default
 
 networks:
   traefik:
