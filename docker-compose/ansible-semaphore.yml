@@ -1,3 +1,4 @@
+version: '3'
 ---
 services:
   mysql:
@@ -38,7 +39,7 @@ services:
     labels:
       - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
       - traefik.http.routers.semaphore.tls=false
-      - traefik.port=
+      - traefik.port=80
       - traefik.http.services.semaphore.loadbalancer.server.port=3000
     networks:
       - traefik
@@ -52,7 +53,7 @@ networks:
 volumes:
   semaphore-mysql:
 
-# env vars:
+# env vars (db passwords should be the same):
 # MYSQL_PASSWORD
 # SEMAPHORE_DB_PASS
 # SEMAPHORE_ADMIN_PASSWORD
