@@ -42,6 +42,11 @@ services:
     networks:
       - traefik
 
+networks:
+  traefik:
+    name: traefik
+    external: true
+
 volumes:
   semaphore-mysql:
 
