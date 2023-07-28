@@ -27,7 +27,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-      labels:
+    labels:
       - traefik.http.routers.dashy.rule=Host(`dashy.christopherenea.net`)
       - traefik.http.routers.dashy.tls=false
       - traefik.http.services.dashy.loadbalancer.server.port=80
