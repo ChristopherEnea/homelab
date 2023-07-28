@@ -1,9 +1,6 @@
 ---
 version: "3.8"
 
-volumes:
-  dashy-config:
-
 services:
   dashy:
     # To build from source, replace 'image: lissy93/dashy' with 'build: .'
@@ -11,8 +8,8 @@ services:
     image: lissy93/dashy
     container_name: Dashy
     # Pass in your config file below, by specifying the path on your host machine
-    volumes:
-      - dashy-config:/app/public/conf.yml
+    # volumes:
+      # - /root/my-config.yml:/app/public/conf.yml
     ports:
       - 4000:80
     # Set any environmental variables
