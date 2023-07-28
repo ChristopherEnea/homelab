@@ -1,16 +1,13 @@
 version: '3'
 
 volumes:
-  fresh-rss-data:
-    driver: local
+  rss-cache:
 
 services:
   full-text-rss:
     image: heussd/fivefilters-full-text-rss:latest
     container_name: full-text-rss
     restart: unless-stopped
-    ports:
-      - "50000:80"
     labels:
       - traefik.http.routers.full-text-rss.rule=Host(`full-text-rss.christopherenea.net`)
       - traefik.http.routers.full-text-rss.tls=false
@@ -18,13 +15,16 @@ services:
       - traefik.port=80
     networks:
       - traefik
+    environment:
+      # Leave empty to disable admin section
+      - FTR_ADMIN_PASSWORD=
+    volumes:
+      - "rss-cache:/var/www/html/cache"
 
   fresh-rss:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: fresh-rss
     restart: unless-stopped
-    ports:
-      - "49999:80"
     environment:
       - PUID=1000
       - PGID=1000
