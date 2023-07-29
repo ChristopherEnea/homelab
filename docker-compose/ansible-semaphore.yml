@@ -12,6 +12,8 @@ services:
       MYSQL_DATABASE: semaphore
       MYSQL_USER: semaphore
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - default
   semaphore:
     restart: unless-stopped
     # ports:
