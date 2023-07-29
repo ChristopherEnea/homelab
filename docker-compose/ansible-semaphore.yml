@@ -18,8 +18,8 @@ services:
   semaphore:
     container_name: semaphore
     restart: unless-stopped
-    # ports:
-    #   - 3000:3000
+    ports:
+      - 3000:3000
     image: semaphoreui/semaphore:latest
     environment:
       SEMAPHORE_DB_USER: semaphore
