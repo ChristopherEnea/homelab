@@ -14,10 +14,12 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - default
+
   semaphore:
+    container_name: semaphore
     restart: unless-stopped
-    # ports:
-      # - 3000:3000
+    ports:
+      - 3000:3000
     image: semaphoreui/semaphore:latest
     environment:
       SEMAPHORE_DB_USER: semaphore
@@ -41,8 +43,8 @@ services:
     labels:
       - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
       - traefik.http.routers.semaphore.tls=false
-      - traefik.port=80
       - traefik.http.services.semaphore.loadbalancer.server.port=3000
+      - traefik.port=80
     networks:
       - traefik
       - default
