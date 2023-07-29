@@ -12,8 +12,8 @@ services:
       MYSQL_DATABASE: semaphore
       MYSQL_USER: semaphore
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-      - default
+    # networks:
+    #   - default
 
   semaphore:
     container_name: semaphore
@@ -45,17 +45,17 @@ services:
       - traefik.http.routers.semaphore.tls=false
       - traefik.http.services.semaphore.loadbalancer.server.port=3000
       - traefik.port=80
-    networks:
-      - traefik
-      - default
+    # networks:
+    #   - traefik
+    #   - default
 
-networks:
-  traefik:
-    name: traefik
-    external: true
+# networks:
+#   traefik:
+#     name: traefik
+#     external: true
 
-volumes:
-  semaphore-mysql:
+# volumes:
+#   semaphore-mysql:
 
 # env vars (db passwords should be the same):
 # MYSQL_PASSWORD
