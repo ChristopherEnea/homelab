@@ -54,8 +54,8 @@ networks:
     name: traefik
     external: true
 
-# volumes:
-#   semaphore-mysql:
+volumes:
+  semaphore-mysql:
 
 # env vars (db passwords should be the same):
 # MYSQL_PASSWORD
