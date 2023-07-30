@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.http.routers.traefik.rule=Host(`traefik.christopherenea.net`)
-      - traefik.http.routers.traefik.tls=false
+      - traefik.http.routers.traefik.tls=true
       - traefik.port=80
       - traefik.http.services.traefik.loadbalancer.server.port=8080
 
