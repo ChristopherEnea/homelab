@@ -11,7 +11,6 @@ services:
      - "--providers.docker"
      - "--entrypoints.websecure.address=:443"
      - "--log.level=DEBUG"
-     - "--log.filePath=/var/log/traefik/traefik.log"
     ports:
       # The HTTP port
       - "80:80"
