@@ -17,6 +17,8 @@ services:
 
   semaphore:
     container_name: semaphore
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
     restart: unless-stopped
     # ports:
     #   - 3000:3000
