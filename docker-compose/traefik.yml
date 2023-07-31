@@ -11,6 +11,7 @@ services:
      - "--providers.docker"
      - "--entrypoints.websecure.address=:443"
      - "--log.level=DEBUG"
+     - "--ping"
     ports:
       # The HTTP port
       - "80:80"
