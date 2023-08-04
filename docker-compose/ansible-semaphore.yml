@@ -7,6 +7,7 @@ services:
     hostname: mysql
     volumes:
       - semaphore-mysql:/var/lib/mysql
+      # must mount time paths in order for time to be correct in container
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -44,6 +45,7 @@ services:
     volumes:
       - ./inventory/:/inventory:ro
       - ./authorized-keys/:/authorized-keys:ro
+      # must mount time paths in order for time to be correct in container
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:

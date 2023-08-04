@@ -7,11 +7,15 @@ services:
     image: traefik:latest
     # Enables the web UI and tells Traefik to listen to docker
     command: 
-     - "--api.insecure=true" 
-     - "--providers.docker"
-     - "--entrypoints.websecure.address=:443"
-     - "--log.level=DEBUG"
-     - "--ping"
+      - "--api.insecure=true" 
+      - "--providers.docker"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--ping"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=googledomains"
+      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       # The HTTP port
       - "80:80"
@@ -21,6 +25,8 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
+      # Create a letsencrypt dir within the folder where the docker-compose file is
+      - "/etc/ssl/certs:/letsencrypt"
     networks:
       - traefik
     restart: unless-stopped
@@ -33,3 +39,7 @@ services:
 networks:
   traefik:
     name: traefik
+
+# env vars
+# ACME_EMAIL
+# GOOGLE_DOMAINS_ACCESS_TOKEN
