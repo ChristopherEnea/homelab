@@ -7,15 +7,23 @@ services:
     image: traefik:latest
     # Enables the web UI and tells Traefik to listen to docker
     command: 
-      - "--api.insecure=true" 
       - "--providers.docker"
-      - "--entrypoints.websecure.address=:443"
-      - "--log.level=DEBUG"
-      - "--ping"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=googledomains"
-      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - --api.dashboard=true
+      - --log.level=INFO
+      #- --log.filepath=/var/log/traefik.log
+      - --accesslog=true
+      #- --accesslog.filepath=/var/log/traefik-access.log
+      - --providers.docker.network=proxy
+      - --providers.docker.exposedByDefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entryPoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.asDefault=true
+      - --entrypoints.websecure.http.tls.certresolver=myresolver
+      - --certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
     ports:
       # The HTTP port
       - "80:80"
@@ -31,8 +39,9 @@ services:
       - traefik
     restart: unless-stopped
     labels:
-      - traefik.http.routers.traefik.rule=Host(`traefik.christopherenea.net`)
+      - traefik.enable=true
       - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.christopherenea.net`)
       - traefik.port=443
       - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
@@ -40,6 +49,10 @@ services:
 networks:
   traefik:
     name: traefik
+
+volumes:
+  letsencrypt:
+    name: letsencrypt
 
 # env vars
 # ACME_EMAIL
