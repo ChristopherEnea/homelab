@@ -35,7 +35,7 @@ services:
       - traefik.http.routers.traefik.tls=true
       - traefik.port=443
       - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - "traefik.http.routers.whoami.tls.certresolver=myresolver" # Uses the Host rule to define which certificate to issue
+      - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
 
 networks:
   traefik:
