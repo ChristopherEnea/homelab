@@ -36,6 +36,8 @@ services:
       - traefik.port=443
       - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
+    environment:
+      GOOGLE_DOMAINS_ACCESS_TOKEN: ${GOOGLE_DOMAINS_ACCESS_TOKEN}
 
 networks:
   traefik:
