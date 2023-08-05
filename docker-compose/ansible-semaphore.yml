@@ -52,9 +52,9 @@ services:
       - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
       - traefik.http.routers.semaphore.tls=true
       - traefik.http.services.semaphore.loadbalancer.server.port=3000
+      - traefik.http.routers.semaphore.tls.certresolver=myresolver
       - traefik.port=443
       - traefik.docker.network=traefik # required to get semaphore to work with traefik
-      - traefik.http.routers.traefik.tls.certresolver=myresolver
     networks:
       - traefik
       - default

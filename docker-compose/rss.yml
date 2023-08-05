@@ -36,8 +36,8 @@ services:
       - traefik.http.routers.fresh-rss.rule=Host(`fresh-rss.christopherenea.net`)
       - traefik.http.routers.fresh-rss.tls=true
       - traefik.http.services.fresh-rss.loadbalancer.server.port=80
+      - traefik.http.routers.fresh-rss.tls.certresolver=myresolver
       - traefik.port=443
-      - traefik.http.routers.traefik.tls.certresolver=myresolver
     networks:
       - traefik
 
