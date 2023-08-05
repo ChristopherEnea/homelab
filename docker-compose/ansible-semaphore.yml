@@ -54,6 +54,7 @@ services:
       - traefik.http.services.semaphore.loadbalancer.server.port=3000
       - traefik.port=443
       - traefik.docker.network=traefik # required to get semaphore to work with traefik
+      - traefik.http.routers.traefik.tls.certresolver=myresolver
     networks:
       - traefik
       - default
