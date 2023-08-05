@@ -12,7 +12,6 @@ services:
       - traefik.http.routers.full-text-rss.rule=Host(`full-text-rss.christopherenea.net`)
       - traefik.http.routers.full-text-rss.tls=true
       - traefik.http.services.full-text-rss.loadbalancer.server.port=80
-      - traefik.port=80
       - traefik.http.routers.full-text.tls.certresolver=myresolver
     networks:
       - traefik
