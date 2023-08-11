@@ -27,7 +27,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # Create a letsencrypt dir within the folder where the docker-compose file is
       - "/etc/ssl/certs:/letsencrypt"
-      - /etc/traefik:/etc/traefik
+      # - /etc/traefik:/etc/traefik
     networks:
       - traefik
     restart: unless-stopped
