@@ -5,8 +5,6 @@ services:
     container_name: microbin
     image: danielszabo99/microbin:latest
     restart: unless-stopped
-    ports:
-     - "${MICROBIN_PORT}:8080"
     volumes:
      - ./microbin-data:/app/microbin_data
     labels:
