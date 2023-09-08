@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  microbin:
+    image: danielszabo99/microbin:latest
+    restart: unless-stopped
+    ports:
+     - "${MICROBIN_PORT}:8080"
+    volumes:
+     - ./microbin-data:/app/microbin_data
+    labels:
+      - traefik.http.routers.microbin.rule=Host(`microbin.christopherenea.net`)
+      - traefik.http.routers.microbin.tls=true
+      - traefik.http.services.microbin.loadbalancer.server.port=8080
+      - traefik.http.routers.dashy.tls.certresolver=myresolver
+      - traefik.port=443
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: traefik
+    external: true
