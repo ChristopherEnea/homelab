@@ -10,10 +10,8 @@ services:
     labels:
       - traefik.http.routers.microbin.rule=Host(`microbin.christopherenea.net`)
       - traefik.http.routers.microbin.tls=true
-      - traefik.http.services.microbin.loadbalancer.server.port=8080
-      - traefik.http.routers.dashy.tls.certresolver=myresolver
+      - traefik.http.routers.microbin.tls.certresolver=myresolver
       - traefik.port=443
-      - traefik.docker.network=traefik # required to get semaphore to work with traefik
     networks:
       - traefik
 
