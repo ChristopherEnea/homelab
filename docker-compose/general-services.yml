@@ -2,6 +2,7 @@ version: '3'
 
 services:
   microbin:
+    container_name: microbin
     image: danielszabo99/microbin:latest
     restart: unless-stopped
     ports:
