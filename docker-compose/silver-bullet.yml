@@ -1,0 +1,28 @@
+version: '3'
+
+volumes:
+  silver-bullet-data:
+    driver: local
+
+services:
+  silverbullet:
+    image: zefhemel/silverbullet
+    container_name: silverbullet
+    restart: unless-stopped
+    ## To enable additional options, such as BasicAuth, uncomment the following line:
+    # command: ["--user=user:pw"]
+    volumes:
+      - silver-bullet-data:/space
+    ports:
+      - 3002:3000
+    labels:
+      - traefik.http.routers.sb.rule=Host(`sb.christopherenea.net`)
+      - traefik.http.routers.sb.tls=false
+      - traefik.port=80
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: traefik
+    external: true
