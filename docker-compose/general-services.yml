@@ -12,6 +12,25 @@ services:
       - traefik.http.routers.microbin.tls=true
       - traefik.http.routers.microbin.tls.certresolver=myresolver
       - traefik.port=443
+      - com.centurylinklabs.watchtower.enable=true
+    networks:
+      - traefik
+
+# https://www.reddit.com/r/selfhosted/comments/wil8mk/comment/ijdcwnw/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=43200
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_LABEL_ENABLE=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - watchtower:/config.json
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - traefik
 
@@ -19,3 +38,6 @@ networks:
   traefik:
     name: traefik
     external: true
+
+volumes:
+  watchtower:
