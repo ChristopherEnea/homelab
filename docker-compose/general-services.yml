@@ -21,13 +21,18 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     environment:
+      # will stop your image reg having every version it downloads so it will just keep the latest one and delete the old ones.
       - WATCHTOWER_CLEANUP=true
+      # 43200 seconds which is 12 hours
       - WATCHTOWER_POLL_INTERVAL=43200
+      # will restart the container when the new image has been downloaded
       - WATCHTOWER_INCLUDE_RESTARTING=true
+      # will only update stacks that have label in the stack
+      # any container without this label will not update
       - WATCHTOWER_LABEL_ENABLE=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - watchtower:/config.json
+      # - watchtower/config.json:/config.json
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
