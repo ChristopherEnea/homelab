@@ -38,7 +38,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - traefik
-    env:
+    environment:
       WATCHTOWER_NOTIFICATION_REPORT: "true"
       WATCHTOWER_NOTIFICATION_URL: ${WATCHTOWER_NOTIFICATION_URL}
       WATCHTOWER_NOTIFICATION_TEMPLATE: |
