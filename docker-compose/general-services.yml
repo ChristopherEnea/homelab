@@ -30,15 +30,15 @@ services:
       - traefik
     environment:
       # will stop your image reg having every version it downloads so it will just keep the latest one and delete the old ones.
-      - WATCHTOWER_CLEANUP=true
+      WATCHTOWER_CLEANUP: true
       # 43200 seconds which is 12 hours
-      - WATCHTOWER_POLL_INTERVAL=43200
+      WATCHTOWER_POLL_INTERVAL: 43200
       # will restart the container when the new image has been downloaded
-      - WATCHTOWER_INCLUDE_RESTARTING=true
+      WATCHTOWER_INCLUDE_RESTARTING: true
       # will only update stacks that have label in the stack
       # any container without this label will not update
-      - WATCHTOWER_LABEL_ENABLE=true
-      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_NOTIFICATION_REPORT: true
       WATCHTOWER_NOTIFICATION_URL: ${WATCHTOWER_NOTIFICATION_URL}
       WATCHTOWER_NOTIFICATION_TEMPLATE: |
         {{- if .Report -}}
