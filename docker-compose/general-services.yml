@@ -15,6 +15,8 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     networks:
       - traefik
+    environment:
+      TZ: America/New_York
 
 # https://www.reddit.com/r/selfhosted/comments/wil8mk/comment/ijdcwnw/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
   watchtower:
@@ -29,6 +31,7 @@ services:
     networks:
       - traefik
     environment:
+      TZ: America/New_York
       # will stop your image reg having every version it downloads so it will just keep the latest one and delete the old ones.
       WATCHTOWER_CLEANUP: true
       # 43200 seconds which is 12 hours
