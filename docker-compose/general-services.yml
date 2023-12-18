@@ -35,7 +35,8 @@ services:
       # will stop your image reg having every version it downloads so it will just keep the latest one and delete the old ones.
       WATCHTOWER_CLEANUP: true
       # 43200 seconds which is 12 hours
-      WATCHTOWER_POLL_INTERVAL: 43200
+      # 604800 seconds which is 7 days
+      WATCHTOWER_POLL_INTERVAL: 604800
       # will restart the container when the new image has been downloaded
       WATCHTOWER_INCLUDE_RESTARTING: true
       # will only update stacks that have label in the stack
