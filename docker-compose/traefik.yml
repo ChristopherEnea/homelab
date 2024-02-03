@@ -13,7 +13,7 @@ services:
       - "--log.level=DEBUG"
       - "--ping"
       - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=googledomains"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -38,12 +38,22 @@ services:
       - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
     environment:
-      GOOGLE_DOMAINS_ACCESS_TOKEN: ${GOOGLE_DOMAINS_ACCESS_TOKEN}
+      CF_API_EMAIL: ${CF_API_EMAIL}
+      CF_API_KEY: ${CF_API_KEY}
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+      CF_ZONE_API_TOKEN: ${CF_ZONE_API_TOKEN}
 
 networks:
   traefik:
     name: traefik
 
+# --------
 # env vars
+# --------
 # ACME_EMAIL
-# GOOGLE_DOMAINS_ACCESS_TOKEN
+# 
+# CF_API_EMAIL
+# CF_API_KEY
+# (pick the two above or two below)
+# CF_DNS_API_TOKEN
+# CF_ZONE_API_TOKEN
