@@ -23,6 +23,7 @@ services:
       - traefik.http.services.dashboard.loadbalancer.server.port=5005
       - traefik.http.routers.dashboard.tls.certresolver=myresolver
       - traefik.port=443
+      - com.centurylinklabs.watchtower.enable=true
 
 # optional but required for Docker secrets (1)
 # secrets:
