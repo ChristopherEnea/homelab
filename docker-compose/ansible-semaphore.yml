@@ -17,7 +17,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - default
-    labesl:
+    labels:
       - com.centurylinklabs.watchtower.enable=true
 
   semaphore:
