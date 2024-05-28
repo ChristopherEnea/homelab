@@ -17,6 +17,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - default
+    labesl:
+      - com.centurylinklabs.watchtower.enable=true
 
   semaphore:
     container_name: semaphore
@@ -55,6 +57,7 @@ services:
       - traefik.http.routers.semaphore.tls.certresolver=myresolver
       - traefik.port=443
       - traefik.docker.network=traefik # required to get semaphore to work with traefik
+      - com.centurylinklabs.watchtower.enable=true
     networks:
       - traefik
       - default
