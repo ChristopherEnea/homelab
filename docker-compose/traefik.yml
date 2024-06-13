@@ -38,8 +38,8 @@ services:
       - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
     environment:
-      CF_API_EMAIL: ${CF_API_EMAIL}
-      CF_API_KEY: ${CF_API_KEY}
+      # CF_API_EMAIL: ${CF_API_EMAIL}
+      # CF_API_KEY: ${CF_API_KEY}
       CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
       CF_ZONE_API_TOKEN: ${CF_ZONE_API_TOKEN}
 
