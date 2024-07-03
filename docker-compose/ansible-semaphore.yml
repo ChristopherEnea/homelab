@@ -73,6 +73,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
       - semaphore-mysql:/backup/semaphore-backup:ro
+    networks:
+      - default
 
 networks:
   traefik:
