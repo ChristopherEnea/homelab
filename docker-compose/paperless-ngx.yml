@@ -49,11 +49,11 @@ services:
       - traefik
       - default
     labels:
-      - traefik.http.routers.paperless-test.rule=Host(`paperless-test.christopherenea.net`)
-      - traefik.http.routers.paperless-test.tls=true
+      - traefik.http.routers.paperless.rule=Host(`paperless.christopherenea.net`)
+      - traefik.http.routers.paperless.tls=true
       - traefik.port=443
-      - traefik.http.services.paperless-test.loadbalancer.server.port=8000
-      - traefik.http.routers.paperless-test.tls.certresolver=myresolver
+      - traefik.http.services.paperless.loadbalancer.server.port=8000
+      - traefik.http.routers.paperless.tls.certresolver=myresolver
       - traefik.docker.network=traefik
 
   backup:
