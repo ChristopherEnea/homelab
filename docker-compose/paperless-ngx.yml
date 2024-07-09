@@ -67,6 +67,7 @@ services:
       AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_ENDPOINT_PROTO: ${AWS_ENDPOINT_PROTO}
       BACKUP_CRON_EXPRESSION: "0 2 * * *"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -95,3 +96,4 @@ networks:
 # AWS_S3_BUCKET_NAME
 # AWS_ACCESS_KEY_ID
 # AWS_SECRET_ACCESS_KEY
+# AWS_ENDPOINT_PROTO
