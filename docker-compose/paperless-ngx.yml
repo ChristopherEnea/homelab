@@ -37,7 +37,6 @@ services:
     restart: unless-stopped
     depends_on:
       - broker
-
     volumes:
       - data:/usr/src/paperless/data
       - media:/usr/src/paperless/media
@@ -45,17 +44,21 @@ services:
       - ./consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://broker:6379
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME}
+      PAPERLESS_TIME_ZONE: ${PAPERLESS_TIME_ZONE}
+      PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_OCR_LANGUAGE}
+      PAPERLESS_URL: ${PAPERLESS_URL}
     networks:
       - traefik
       - default
     labels:
+      - traefik.enable=true
       - traefik.http.routers.paperless.rule=Host(`paperless.christopherenea.net`)
       - traefik.http.routers.paperless.tls=true
-      - traefik.port=443
       - traefik.http.services.paperless.loadbalancer.server.port=8000
       - traefik.http.routers.paperless.tls.certresolver=myresolver
+      - traefik.port=443
       - traefik.docker.network=traefik
-      - "traefik.frontend.headers.customResponseHeaders=Origin:"
 
   backup:
     image: offen/docker-volume-backup:v2
@@ -65,7 +68,6 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       BACKUP_CRON_EXPRESSION: "0 2 * * *"
-
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
