@@ -55,6 +55,7 @@ services:
       - traefik.http.services.paperless.loadbalancer.server.port=8000
       - traefik.http.routers.paperless.tls.certresolver=myresolver
       - traefik.docker.network=traefik
+      - "traefik.frontend.headers.customResponseHeaders=Origin:"
 
   backup:
     image: offen/docker-volume-backup:v2
