@@ -1,0 +1,95 @@
+# Docker Compose file for running paperless from the Docker Hub.
+# This file contains everything paperless needs to run.
+# Paperless supports amd64, arm and arm64 hardware.
+#
+# All compose files of paperless configure paperless in the following way:
+#
+# - Paperless is (re)started on system boot, if it was running before shutdown.
+# - Docker volumes for storing data are managed by Docker.
+# - Folders for importing and exporting files are created in the same directory
+#   as this file and mounted to the correct folders inside the container.
+# - Paperless listens on port 8000.
+#
+# SQLite is used as the database. The SQLite file is stored in the data volume.
+#
+# To install and update paperless with this file, do the following:
+#
+# - Copy this file as 'docker-compose.yml' and the files 'docker-compose.env'
+#   and '.env' into a folder.
+# - Run 'docker compose pull'.
+# - Run 'docker compose run --rm webserver createsuperuser' to create a user.
+# - Run 'docker compose up -d'.
+#
+# For more extensive installation and update instructions, refer to the
+# documentation.
+
+services:
+  broker:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    networks:
+      - default
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - broker
+
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - ./export:/usr/src/paperless/export
+      - ./consume:/usr/src/paperless/consume
+    env_file: stack.env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+    networks:
+      - traefik
+      - default
+    labels:
+      - traefik.http.routers.paperless-test.rule=Host(`paperless-test.christopherenea.net`)
+      - traefik.http.routers.paperless-test.tls=true
+      - traefik.port=443
+      - traefik.http.services.paperless-test.loadbalancer.server.port=8000
+      - traefik.http.routers.paperless-test.tls.certresolver=myresolver
+      - traefik.docker.network=traefik
+
+  backup:
+    image: offen/docker-volume-backup:v2
+    environment:
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - data:/backup/paperless-data-backup:ro
+      - media:/backup/paperless-media-backup:ro
+      - redisdata:/backup/paperless-redisdata-backup:ro
+
+volumes:
+  data:
+  media:
+  redisdata:
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+
+
+# Taken from: https://github.com/paperless-ngx/paperless-ngx/blob/main/docker/compose/docker-compose.sqlite.yml
+# COMPOSE_PROJECT_NAME
+# PAPERLESS_TIME_ZONE
+# PAPERLESS_OCR_LANGUAGE
+# PAPERLESS_URL
+# AWS_ENDPOINT
+# AWS_S3_BUCKET_NAME
+# AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY
