@@ -63,6 +63,7 @@ services:
 
   backup:
     image: offen/docker-volume-backup:v2
+    restart: unless-stopped
     environment:
       AWS_ENDPOINT: ${AWS_ENDPOINT}
       AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
