@@ -48,7 +48,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
-    # traefik
+      # traefik
       - traefik.http.routers.semaphore.rule=Host(`semaphore.christopherenea.net`)
       - traefik.http.routers.semaphore.tls=true
       - traefik.http.services.semaphore.loadbalancer.server.port=3000

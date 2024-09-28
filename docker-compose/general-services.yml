@@ -16,9 +16,9 @@ services:
     networks:
       - traefik
     environment:
-      TZ: America/New_York
+      TZ: America/Detroit
 
-# https://www.reddit.com/r/selfhosted/comments/wil8mk/comment/ijdcwnw/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  # https://www.reddit.com/r/selfhosted/comments/wil8mk/comment/ijdcwnw/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
@@ -31,7 +31,7 @@ services:
     networks:
       - traefik
     environment:
-      TZ: America/New_York
+      TZ: America/Detroit
       # will stop your image reg having every version it downloads so it will just keep the latest one and delete the old ones.
       WATCHTOWER_CLEANUP: true
       # 43200 seconds which is 12 hours
@@ -64,6 +64,18 @@ services:
         {{- else -}}
           {{range .Entries -}}{{.Message}}{{"\n"}}{{- end -}}
         {{- end -}}
+
+  it-tools:
+    image: corentinth/it-tools:latest
+    restart: unless-stopped
+    labels:
+      # traefik
+      - traefik.http.routers.ittools.rule=Host(`ittools.christopherenea.net`)
+      - traefik.http.routers.ittools.tls=true
+      - traefik.port=443
+      - traefik.http.routers.ittools.tls.certresolver=myresolver
+    networks:
+      - traefik
 
 networks:
   traefik:
