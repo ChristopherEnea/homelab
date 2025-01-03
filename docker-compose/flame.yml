@@ -12,7 +12,7 @@ services:
     # secrets:
       # - password # optional but required for (1)
     environment:
-      - PASSWORD=Oncoming Victory Tribesman Trapped
+      - PASSWORD=${DASHBOARD_PASSWORD}
       # - PASSWORD_FILE=/run/secrets/password # optional but required for (1)
     restart: unless-stopped
     networks:
@@ -24,6 +24,21 @@ services:
       - traefik.http.routers.dashboard.tls.certresolver=myresolver
       - traefik.port=443
       - com.centurylinklabs.watchtower.enable=true
+
+  backup:
+    image: offen/docker-volume-backup:v2
+    restart: unless-stopped
+    environment:
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_ENDPOINT_INSECURE: ${AWS_ENDPOINT_INSECURE}
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - flame:/backup/flame:ro
 
 # optional but required for Docker secrets (1)
 # secrets:
@@ -37,3 +52,11 @@ networks:
   traefik:
     name: traefik
     external: true
+
+# ---Env vars---
+# DASHBOARD_PASSWORD
+# AWS_ENDPOINT
+# AWS_S3_BUCKET_NAME
+# AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY
+# AWS_ENDPOINT_INSECURE
