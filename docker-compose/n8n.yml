@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  n8nio:
+    image: docker.n8n.io/n8nio/n8n
+    volumes:
+      - n8n_data:/home/node/.n8n
+    container_name: n8n
+    tty: true
+    stdin_open: true
+    environment:
+     - N8N_EDITOR_BASE_URL=https://n8n.christopherenea.net
+     - WEBHOOK_URL=https://n8n.christopherenea.net
+    labels:
+      - traefik.http.routers.n8n.rule=Host(`n8n.christopherenea.net`)
+      - traefik.http.routers.n8n.tls=true
+      - traefik.port=443
+      - traefik.http.routers.n8n.tls.certresolver=myresolver
+    networks:
+      - traefik
+   
+networks:
+  traefik:
+    name: traefik
+    external: true
+    
+volumes:
+  n8n_data: 
