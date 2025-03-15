@@ -35,6 +35,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_ENDPOINT_INSECURE: ${AWS_ENDPOINT_INSECURE}
       BACKUP_CRON_EXPRESSION: "0 2 * * *"
+      BACKUP_RETENTION_DAYS: 14
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
