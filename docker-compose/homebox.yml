@@ -1,0 +1,49 @@
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    container_name: homebox
+    restart: unless-stopped
+    environment:
+    - HBOX_LOG_LEVEL=info
+    - HBOX_LOG_FORMAT=text
+    - HBOX_WEB_MAX_FILE_UPLOAD=10
+    # Please consider allowing analytics to help us improve Homebox (basic computer information, no personal data)
+    - HBOX_OPTIONS_ALLOW_ANALYTICS=false
+    volumes:
+      - homebox-data:/data/
+    labels:
+      - traefik.http.routers.homebox.rule=Host(`homebox.christopherenea.net`)
+      - traefik.http.routers.homebox.tls=true
+      - traefik.port=443
+      - traefik.http.routers.homebox.tls.certresolver=myresolver
+      - traefik.http.services.homebox.loadbalancer.server.port=7745
+      - traefik.docker.network=traefik
+    networks:
+      - default
+      - traefik
+
+  backup:
+    container_name: homebox_backup
+    image: offen/docker-volume-backup:v2
+    restart: unless-stopped
+    environment:
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+      BACKUP_RETENTION_DAYS: 14
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - homebox-data:/backup/paperless-data-backup:ro
+
+volumes:
+   homebox-data:
+     driver: local
+
+networks:
+  default:
+  traefik:
+    name: traefik
+    external: true
