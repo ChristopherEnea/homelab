@@ -71,6 +71,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       BACKUP_CRON_EXPRESSION: "10 2 * * *"
       BACKUP_RETENTION_DAYS: 14
+      GPG_PASSPHRASE: ${GPG_PASSPHRASE}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
@@ -93,3 +94,4 @@ volumes:
 # AWS_S3_BUCKET_NAME
 # AWS_ACCESS_KEY_ID
 # AWS_SECRET_ACCESS_KEY
+# GPG_PASSPHRASE
