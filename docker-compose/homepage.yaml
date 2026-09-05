@@ -13,13 +13,6 @@ services:
       - homepage-config:/app/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
     restart: unless-stopped
-    # Configure healthchecks
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     labels:
       # traefik
       - traefik.http.routers.${ROUTER_NAME}.rule=Host(`${ROUTER_NAME}.christopherenea.net`)
