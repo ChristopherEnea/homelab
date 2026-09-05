@@ -27,6 +27,7 @@ services:
       - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=3000
       - traefik.http.routers.${ROUTER_NAME}.tls.certresolver=myresolver
       - traefik.port=443
+      - traefik.docker.network=traefik
       # watchtower
       - com.centurylinklabs.watchtower.enable=true
     networks:
