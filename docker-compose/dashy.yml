@@ -15,6 +15,7 @@ services:
     # Set any environmental variables
     environment:
       - NODE_ENV=production
+      - ROUTER_NAME=dashy
     # Specify your user ID and group ID. You can find this by running `id -u` and `id -g`
     #  - UID=1000
     #  - GID=1000
@@ -28,11 +29,20 @@ services:
       retries: 3
       start_period: 40s
     labels:
-      - traefik.http.routers.dashy.rule=Host(`dashy.christopherenea.net`)
-      - traefik.http.routers.dashy.tls=true
-      - traefik.http.services.dashy.loadbalancer.server.port=80
-      - traefik.http.routers.dashy.tls.certresolver=myresolver
+      # traefik
+      - traefik.http.routers.${ROUTER_NAME}.rule=Host(`${ROUTER_NAME}.christopherenea.net`)
+      - traefik.http.routers.${ROUTER_NAME}.tls=true
+      - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=80
+      - traefik.http.routers.${ROUTER_NAME}.tls.certresolver=myresolver
       - traefik.port=443
+      # watchtower
+      - com.centurylinklabs.watchtower.enable=true
+      # homepage
+      - homepage.group=Homelab
+      - homepage.name=Dashy
+      - homepage.icon=sh.dashy.svg
+      - homepage.href=http://dashboard.christopherenea.net/
+      - homepage.description=Dashboard for managing your services
     networks:
       - traefik
 

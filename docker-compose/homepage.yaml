@@ -1,0 +1,57 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: gethomepage.dev # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
+      PUID: 1000 # optional, your user id
+      PGID: 1000 # optional, your group id
+      ROUTER_NAME: homepage
+    # ports:
+    #   - 3000:3000
+    volumes:
+      - homepage-config:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
+    restart: unless-stopped
+    # Configure healthchecks
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      # traefik
+      - traefik.http.routers.${ROUTER_NAME}.rule=Host(`${ROUTER_NAME}.christopherenea.net`)
+      - traefik.http.routers.${ROUTER_NAME}.tls=true
+      - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=3000
+      - traefik.http.routers.${ROUTER_NAME}.tls.certresolver=myresolver
+      - traefik.port=443
+      # watchtower
+      - com.centurylinklabs.watchtower.enable=true
+    networks:
+      - traefik
+
+  backup:
+    image: offen/docker-volume-backup:v2
+    restart: unless-stopped
+    environment:
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      BACKUP_CRON_EXPRESSION: "10 2 * * *"
+      BACKUP_RETENTION_DAYS: 14
+      GPG_PASSPHRASE: ${GPG_PASSPHRASE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - homepage-config:/app/config:ro
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+
+volumes:
+  homepage-config:
