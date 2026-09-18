@@ -32,11 +32,12 @@ services:
       - traefik
     restart: unless-stopped
     labels:
-      - traefik.http.routers.traefik.rule=Host(`traefik.christopherenea.net`)
-      - traefik.http.routers.traefik.tls=true
+      # traefik
+      - traefik.http.routers.${ROUTER_NAME}.rule=Host(`traefik.christopherenea.net`)
+      - traefik.http.routers.${ROUTER_NAME}.tls=true
       - traefik.port=443
-      - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - traefik.http.routers.traefik.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
+      - traefik.http.services.${ROUTER_NAME}.loadbalancer.server.port=8080
+      - traefik.http.routers.${ROUTER_NAME}.tls.certresolver=myresolver # Uses the Host rule to define which certificate to issue
     environment:
       # CF_API_EMAIL: ${CF_API_EMAIL}
       # CF_API_KEY: ${CF_API_KEY}
@@ -50,10 +51,5 @@ networks:
 # --------
 # env vars
 # --------
-# ACME_EMAIL
-# 
-# CF_API_EMAIL
-# CF_API_KEY
-# (pick the two above or two below)
 # CF_DNS_API_TOKEN
-# CF_ZONE_API_TOKEN
+# ROUTER_NAME
