@@ -3,44 +3,69 @@ version: '3'
 volumes:
   rss-cache:
 
+
 services:
   full-text-rss:
     image: heussd/fivefilters-full-text-rss:latest
     container_name: full-text-rss
     restart: unless-stopped
     labels:
-      - traefik.http.routers.full-text-rss.rule=Host(`full-text-rss.christopherenea.net`)
-      - traefik.http.routers.full-text-rss.tls=true
-      - traefik.http.services.full-text-rss.loadbalancer.server.port=80
-      - traefik.http.routers.full-text-rss.tls.certresolver=myresolver
+    - traefik.http.routers.full-text-rss.rule=Host(`full-text-rss.christopherenea.net`)
+    - traefik.http.routers.full-text-rss.tls=true
+    - traefik.http.services.full-text-rss.loadbalancer.server.port=80
+    - traefik.http.routers.full-text-rss.tls.certresolver=myresolver
     networks:
-      - traefik
+    - traefik
     environment:
-      # Leave empty to disable admin section
-      - FTR_ADMIN_PASSWORD=
+    # Leave empty to disable admin section
+    - FTR_ADMIN_PASSWORD=
     volumes:
-      - "rss-cache:/var/www/html/cache"
+    - "rss-cache:/var/www/html/cache"
 
   fresh-rss:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: fresh-rss
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/Detroit
     volumes:
-      - /etc/fresh-rss:/config
+    - /etc/fresh-rss:/config
     labels:
-      - traefik.http.routers.fresh-rss.rule=Host(`fresh-rss.christopherenea.net`)
-      - traefik.http.routers.fresh-rss.tls=true
-      - traefik.http.services.fresh-rss.loadbalancer.server.port=80
-      - traefik.http.routers.fresh-rss.tls.certresolver=myresolver
-      - traefik.port=443
+    - traefik.http.routers.fresh-rss.rule=Host(`fresh-rss.christopherenea.net`)
+    - traefik.http.routers.fresh-rss.tls=true
+    - traefik.http.services.fresh-rss.loadbalancer.server.port=80
+    - traefik.http.routers.fresh-rss.tls.certresolver=myresolver
+    - traefik.port=443
     networks:
-      - traefik
+    - traefik
+
+  backup:
+    image: offen/docker-volume-backup:v2
+    restart: unless-stopped
+    environment:
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_ENDPOINT_INSECURE: ${AWS_ENDPOINT_INSECURE}
+      TZ: America/Detroit
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+      BACKUP_RETENTION_DAYS: 14
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - rss-cache:/backup/rss-cache:ro
+    - /etc/fresh-rss:/backup/fresh-rss:ro
 
 networks:
   traefik:
     name: traefik
     external: true
+
+# ---Env vars---
+# AWS_ENDPOINT
+# AWS_S3_BUCKET_NAME
+# AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY
+# AWS_ENDPOINT_INSECURE
