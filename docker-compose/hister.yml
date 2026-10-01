@@ -1,0 +1,85 @@
+# Docker Compose file for running Hister (Your Own Search Engine).
+# This file contains everything Hister needs to run.
+# Hister supports amd64, arm and arm64 hardware.
+#
+# All compose files of Hister configure Hister in the following way:
+#
+# - Hister is (re)started on system boot, if it was running before shutdown.
+# - Docker volumes for storing data are managed by Docker.
+# - Folders for importing and exporting files are created in the same directory
+#   as this file and mounted to the correct folders inside the container.
+# - Hister listens on port 4433.
+#
+# Data is stored in a Docker volume and backed up using the docker-volume-backup service.
+#
+# To install and update Hister with this file, do the following:
+#
+# - Copy this file as 'docker-compose.yml' into a folder.
+# - Run 'docker compose pull'.
+# - Run 'docker compose up -d'.
+#
+# For more extensive installation and update instructions, refer to the
+# documentation at https://hister.org/docs/docker
+
+services:
+  hister:
+    image: ghcr.io/asciimoo/hister:latest
+    container_name: hister
+    restart: unless-stopped
+    environment:
+      # Hister runs on port 4433 by default.
+      # Set the server address to listen on all interfaces.
+      - HISTER__SERVER__ADDRESS=0.0.0.0:4433
+      # Set the base URL to your public domain or internal IP.
+      # Replace with your actual hostname or IP address.
+      - HISTER__SERVER__BASE_URL=https://hister.christopherenea.net
+    volumes:
+      - hister_data:/hister/data
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hister.rule=Host(`hister.christopherenea.net`)
+      - traefik.http.routers.hister.tls=true
+      - traefik.http.routers.hister.tls.certresolver=myresolver
+      - traefik.port=4433
+      - traefik.docker.network=traefik
+
+  backup:
+    image: offen/docker-volume-backup:v2
+    restart: unless-stopped
+    environment:
+      # AWS S3 configuration for backup storage.
+      # Replace with your actual S3 endpoint and credentials.
+      AWS_ENDPOINT: ${AWS_ENDPOINT}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_ENDPOINT_INSECURE: ${AWS_ENDPOINT_INSECURE}
+      # Backup schedule: daily at 2 AM.
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+      # Keep backups for 14 days.
+      BACKUP_RETENTION_DAYS: 14
+      # GPG passphrase for encryption (if enabled).
+      GPG_PASSPHRASE: ${GPG_PASSPHRASE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - hister_data:/backup/hister-data-backup:ro
+
+volumes:
+  hister_data:
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+
+
+# Environment variables required (defined in .env file):
+# AWS_ENDPOINT
+# AWS_S3_BUCKET_NAME
+# AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY
+# AWS_ENDPOINT_INSECURE
+# GPG_PASSPHRASE
