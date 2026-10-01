@@ -7,6 +7,7 @@
 # TZ=
 # N8N_RUNNERS_AUTH_TOKEN=(generate with openssl rand -base64 48)
 # SANDBOX_API_KEYS=(generate with openssl rand -base64 48)
+# N8N_SANDBOX_SERVICE_API_KEY=(use the same value as SANDBOX_API_KEYS)
 # SANDBOX_API_RUNNER_REGISTRATION_TOKEN=(generate with openssl rand -base64 48)
 # SANDBOX_API_RUNNER_API_KEY=(generate with openssl rand -base64 48)
 
@@ -94,6 +95,9 @@ services:
   sandbox-runner-1:
     image: ghcr.io/n8n-io/n8n-sandbox-service-runner-dind:${N8N_SANDBOX_VERSION:-latest}
     privileged: true
+    dns:
+    - 1.1.1.1
+    - 8.8.8.8
     depends_on:
       sandbox-api:
         condition: service_healthy
@@ -117,6 +121,7 @@ services:
     - sandbox-tls:/tls:ro
     networks:
     - n8n_internal
+    - sandbox_egress
 
   task-runners:
     image: n8nio/runners:${N8N_VERSION:-latest}
@@ -135,6 +140,8 @@ networks:
     external: true
   n8n_internal:
     internal: true
+  sandbox_egress:
+
 
 volumes:
   n8n_data:
